@@ -29,6 +29,7 @@ int main()
     {
         exitChosen = false;
 
+        
         printf_s("Hello! You currently have:\n");
         printf_s("Choose your role: (Enter only number)\n");
         printf_s("1. Receptionist\n2. Customer\n3. Photographer\n4. Quit Program\n");
