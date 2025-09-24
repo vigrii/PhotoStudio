@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <stdbool.h>
 
 int main()
 {
@@ -9,16 +10,22 @@ int main()
     int developerAmount = 5;
     int inkAmount = 5;
 
+    int paperSpent = 0;
+    int developerSpent = 0;
+    int inkSpent = 0;
+
     int photosToPrint = 5;
     int photosToDevelop = 5;
     int photosPrinted = 0;
     int photosDeveloped = 0;
+
+    int totalRevenue = 0;
     
-    // TEST TEST TEST
     bool exitChosen = false;
     bool fullExitChosen = false;
+
     int photographerChoice = 0;
-    
+    int receptionistChoice = 0;
 
     while(!fullExitChosen)// lisa ka functioni mis laseb kasutajal kontrollida mis materjalid alles on + mitu fotod oli valmis tehtud.
     {
@@ -33,6 +40,48 @@ int main()
         {
         case 1:
             printf_s("Receptionist chosen\n");
+
+            while (!exitChosen) {
+
+
+                printf_s("What would you like to do? (Enter only number)\n");
+                printf_s("1. View pending orders\n2. View ongoing orders\n3. View completed orders\n4. View today's revenue\n5. View today's spent materials\n6. Exit\n");
+
+                scanf_s("%d", &receptionistChoice);
+
+                switch (receptionistChoice) // since currently we do not have an order making system i can not create a system to arrange the orders
+                {
+                case 1:
+                    printf_s("Viewing pending orders\n--------------\n");
+                    break;
+
+                case 2:
+                    printf_s("Viewing ongoing orders\n--------------\n");
+                    break;
+
+                case 3:
+                    printf_s("Viewing completed orders\n---------------\n");
+                    break;
+
+                case 4:
+                    printf_s("Viewing today's revenue\n--------------\n");
+                    printf_s("Today's revenue = %.2f\n", (float)totalRevenue);
+                    break;
+
+                case 5:
+                    printf_s("Viewing today's spent materials\n---------------\n");
+                    printf_s("Ink spent = %d\nPaper spent = %d\nDeveloper spent = %d\n", inkSpent, paperSpent, developerSpent);
+                    break;
+
+                case 6:
+                    exitChosen = true;
+                    break;
+
+                default:
+                    printf_s("Invalid choice\n");
+                    break;
+                }
+            }
             break;
         case 2:
             printf_s("Customer chosen\n");
@@ -67,6 +116,8 @@ int main()
                         --developerAmount;
                         --paperAmount;
                         ++photosDeveloped;
+                        ++developerSpent;
+                        ++paperSpent;
                         break;
                     case 2:
                         break;
