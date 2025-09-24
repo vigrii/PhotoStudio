@@ -14,12 +14,11 @@ int main()
     int photosPrinted = 0;
     int photosDeveloped = 0;
     
-    
     bool exitChosen = false;
     bool fullExitChosen = false;
     int photographerChoice = 0;
     
-
+    //THIS IS A TEST
     while(!fullExitChosen)// lisa ka functioni mis laseb kasutajal kontrollida mis materjalid alles on + mitu fotod oli valmis tehtud.
     {
         exitChosen = false; //used to make sure that the role selection while loop works correctly. 
