@@ -24,6 +24,8 @@ int main()
     {
         exitChosen = false;
         
+
+        //test
         printf_s("Choose your role: (Enter only number)\n");
         printf_s("1. Receptionist (IN DEVELOPMENT)\n2. Customer (IN DEVELOPMENT)\n3. Photographer\n4. Quit Program\n");
 
