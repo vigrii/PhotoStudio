@@ -28,11 +28,9 @@ int main()
     while(!fullExitChosen)// lisa ka functioni mis laseb kasutajal kontrollida mis materjalid alles on + mitu fotod oli valmis tehtud.
     {
         exitChosen = false;
-
         
-        printf_s("Hello! You currently have:\n");
         printf_s("Choose your role: (Enter only number)\n");
-        printf_s("1. Receptionist\n2. Customer\n3. Photographer\n4. Quit Program\n");
+        printf_s("1. Receptionist (IN DEVELOPMENT)\n2. Customer (IN DEVELOPMENT)\n3. Photographer\n4. Quit Program\n");
 
         scanf_s("%d", &roleChosen);
     
@@ -53,7 +51,7 @@ int main()
                 printf_s("You have %d photos printed and %d photos developed\n", photosPrinted, photosDeveloped);
                 printf_s("You have %d photos to print and %d photos to develop.\n\n", photosToPrint, photosToDevelop);
                 printf_s("What would you like to do? (Enter only number)\n");
-                printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (NOT WORKING)\n");
+                printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (IN DEVELOPMENT)\n");
             
                 scanf_s("%d", &photographerChoice);
             
