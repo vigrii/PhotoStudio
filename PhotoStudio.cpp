@@ -22,20 +22,23 @@ int main()
 
     while(!fullExitChosen)// lisa ka functioni mis laseb kasutajal kontrollida mis materjalid alles on + mitu fotod oli valmis tehtud.
     {
-        exitChosen = false;
+        exitChosen = false; //used to make sure that the role selection while loop works correctly. 
         
         printf_s("Choose your role: (Enter only number)\n");
         printf_s("1. Receptionist (IN DEVELOPMENT)\n2. Customer (IN DEVELOPMENT)\n3. Photographer\n4. Quit Program\n");
 
-        scanf_s("%d", &roleChosen);
+        scanf_s("%d", &roleChosen); //user makes a choice using this function.
     
-        switch (roleChosen)
+        switch (roleChosen) // this switch holds the necessary code for everythin
         {
         case 1:
             printf_s("Receptionist chosen\n");
             break;
         case 2:
             printf_s("Customer chosen\n");
+
+            printf_s("What would you like to do? (Enter only number)\n");
+            printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (IN DEVELOPMENT)\n");
             break;
         case 3:
             printf_s("Photographer chosen\n");
