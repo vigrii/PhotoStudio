@@ -18,12 +18,7 @@ int main()
     bool exitChosen = false;
     bool fullExitChosen = false;
     int photographerChoice = 0;
-
     
-    
-    int receptionist(void);
-    int customer(void);
-    int photographer(void);
 
     while(!fullExitChosen)// lisa ka functioni mis laseb kasutajal kontrollida mis materjalid alles on + mitu fotod oli valmis tehtud.
     {
@@ -95,20 +90,3 @@ int main()
     return 0;
 }
 
-int receptionist()
-{
-    
-    return 0;
-}
-
-int customer()
-{
-    
-    return 0;
-}
-
-int photographer()
-{
-    
-    return 0;
-}
