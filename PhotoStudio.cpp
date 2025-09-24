@@ -14,7 +14,7 @@ int main()
     int photosPrinted = 0;
     int photosDeveloped = 0;
     
-    
+    // TEST TEST TEST
     bool exitChosen = false;
     bool fullExitChosen = false;
     int photographerChoice = 0;
