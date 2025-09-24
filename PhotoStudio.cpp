@@ -46,8 +46,11 @@ int main()
             break;
         case 3:
             printf_s("Photographer chosen\n");
-            while (paperAmount != 0 && developerAmount != 0 && !exitChosen)
+            printf_s("You currently have: %d paper, %d developer and %d ink\n", paperAmount, developerAmount, inkAmount);
+            
+            while (!exitChosen)
             {
+                printf_s("You have %d photos printed and %d photos developed\n", photosPrinted, photosDeveloped);
                 printf_s("You have %d photos to print and %d photos to develop.\n\n", photosToPrint, photosToDevelop);
                 printf_s("What would you like to do? (Enter only number)\n");
                 printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (NOT WORKING)\n");
@@ -57,6 +60,12 @@ int main()
                 switch (photographerChoice)
                 {
                     case 1: // lisa if checki mis annab erineva lause kui sul on materjalid otsas.
+                    if (paperAmount == 0 || developerAmount == 0)
+                    {
+                        printf_s("Insufficient materials!\n");
+                        continue;
+                    }
+                    
                         printf_s("Developing photos.\n");
                         --photosToDevelop;
                         --developerAmount;
