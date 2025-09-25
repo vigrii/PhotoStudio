@@ -27,18 +27,18 @@ int main()
     int photographerChoice = 0;
     int receptionistChoice = 0;
 
-    while(!fullExitChosen)// lisa ka functioni mis laseb kasutajal kontrollida mis materjalid alles on + mitu fotod oli valmis tehtud.
+    while(!fullExitChosen) //this is the main menu loop that allows the user to go back and forth between different roles
     {
-        exitChosen = false; //used to make sure that the role selection while loop works correctly. 
+        exitChosen = false; //used to make sure that the user can properly back out of a role (e.g photographer -> menu -> receptionist).
         
-        printf_s("Choose your role: (Enter only number)\n");
-        printf_s("1. Receptionist (IN DEVELOPMENT)\n2. Customer (IN DEVELOPMENT)\n3. Photographer\n4. Quit Program\n");
+        printf_s("Choose your role: (Enter only number)\n"); // currently there's a bug where the system goes crazy if a user inputs a character instead of a number. planning to fix.
+        printf_s("1. Receptionist (IN DEVELOPMENT)\n2. Customer (IN DEVELOPMENT)\n3. Photographer\n4. Quit Program\n"); // the choice can be made by inputting a number
 
         scanf_s("%d", &roleChosen); //user makes a choice using this function.
     
-        switch (roleChosen) // this switch holds the necessary code for everythin
+        switch (roleChosen) // this switch holds the necessary code for everything regarding different roles and their respective systems.
         {
-        case 1:
+        case 1: // heavily in development, the receptionist, currently the user can view the temporary text that is implemented. the receptionist will be able to see the orders that the customer has placed.
             printf_s("Receptionist chosen\n");
 
             while (!exitChosen) {
@@ -49,7 +49,7 @@ int main()
 
                 scanf_s("%d", &receptionistChoice);
 
-                switch (receptionistChoice) // since currently we do not have an order making system i can not create a system to arrange the orders
+                switch (receptionistChoice) // since currently we do not have an order making system i can not create a system to arrange the orders - virgo
                 {
                 case 1:
                     printf_s("Viewing pending orders\n--------------\n");
@@ -83,13 +83,13 @@ int main()
                 }
             }
             break;
-        case 2:
+        case 2: // heavily in development, the customer will be the one who can make an order and decide if it's a rush order or not.
             printf_s("Customer chosen\n");
 
             printf_s("What would you like to do? (Enter only number)\n");
             printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (IN DEVELOPMENT)\n");
             break;
-        case 3:
+        case 3: // the photographer, the most developed right now, but still not finished. the photographer can complete the orders by using the necessary materials.
             printf_s("Photographer chosen\n");
             printf_s("You currently have: %d paper, %d developer and %d ink\n", paperAmount, developerAmount, inkAmount);
             
@@ -105,7 +105,7 @@ int main()
                 switch (photographerChoice)
                 {
                     case 1: // lisa if checki mis annab erineva lause kui sul on materjalid otsas.
-                    if (paperAmount == 0 || developerAmount == 0)
+                    if (paperAmount == 0 || developerAmount == 0) // currently the only system implemented. on inputting '1', the paper and developer amount goes down and the photosDeveloped variable goes up.
                     {
                         printf_s("Insufficient materials!\n");
                         continue;
@@ -130,7 +130,7 @@ int main()
                 }
             }
             break;
-            case 4:
+            case 4: // allows the user to quit the program by not closing the program by hand.
             printf_s("Quitting program\n");
             fullExitChosen = true;
             break;
