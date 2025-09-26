@@ -17,7 +17,7 @@ int photosToDevelop = 5;
 int photosPrinted = 0;
 int photosDeveloped = 0;
 
-int totalRevenue = 0;
+double totalRevenue = 0;
 
 bool exitChosen = false;
 bool fullExitChosen = false;
@@ -53,7 +53,7 @@ void receptionist() // heavily in development, the receptionist, currently the u
 
         case 4:
             printf_s("Viewing today's revenue\n--------------\n");
-            printf_s("Today's revenue = %.2f\n", (float)totalRevenue);
+            printf_s("Today's revenue = %.2lf\n", totalRevenue);
             break;
 
         case 5:
@@ -110,6 +110,7 @@ void photographer() // the photographer, the most developed right now, but still
                 ++photosDeveloped;
                 ++developerSpent;
                 ++paperSpent;
+                totalRevenue += 1.2f;
                 break;
             case 2:
                 break;
