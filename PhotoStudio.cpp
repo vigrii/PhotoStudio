@@ -4,6 +4,7 @@
 
 int roleChosen = 0;
 
+//case 1
 int paperAmount = 5;
 int developerAmount = 5;
 int inkAmount = 5;
@@ -38,7 +39,7 @@ void receptionist() // heavily in development, the receptionist, currently the u
         scanf_s("%d", &receptionistChoice);
 
         switch (receptionistChoice) // since currently we do not have an order making system i can not create a system to arrange the orders - virgo
-        {
+        { // case 2
         case 1:
             printf_s("Viewing pending orders\n--------------\n");
             break;
@@ -98,7 +99,7 @@ void photographer() // the photographer, the most developed right now, but still
         {
             case 1: // lisa if checki mis annab erineva lause kui sul on materjalid otsas.
             if (paperAmount == 0 || developerAmount == 0) // currently the only system implemented. on inputting '1', the paper and developer amount goes down and the photosDeveloped variable goes up.
-            {
+            { //case 1
                 printf_s("Insufficient materials!\n");
                 continue;
             }
