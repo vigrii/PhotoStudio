@@ -68,7 +68,7 @@ void receptionist() // heavily in development, the receptionist, currently the u
         {
         case 1:
             printf_s("Viewing pending orders\n--------------\n");
-            for (int i = 0; i < sizeof(clients); i++)
+            for (int i = 0; i < sizeof(clients); i++)//TODO: viska seda case 2te, ehk üks asi võrra alla.
             {
                 if (clients[i]->isOccupied)
                 {
