@@ -33,7 +33,7 @@ struct client
     bool rushOrder;
     char name[20];
     int day, month, year;
-    bool developOrPrintPhoto; //false = develop; true = print
+    int photosToPrint, photosToDevelop;
 };
 
 client* clients[10];
