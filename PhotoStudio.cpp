@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 int roleChosen = 0;
 
@@ -26,6 +27,20 @@ bool fullExitChosen = false;
 int photographerChoice = 0;
 int receptionistChoice = 0;
 
+int userChoice(int Choice)
+{
+    system("cls"); //clears the terminal after each input, only works in windows machines, (for some reason my vs code terminal bugs out if this is included but works in the .exe, uncomment before finishing project)
+    if(Choice == 9)
+    {
+        exitChosen = true;
+        return 0;
+    }
+    else
+    {
+        return Choice;
+    }
+}
+
 
 void receptionist() // heavily in development, the receptionist, currently the user can view the temporary text that is implemented. the receptionist will be able to see the orders that the customer has placed.
 {
@@ -38,8 +53,8 @@ void receptionist() // heavily in development, the receptionist, currently the u
 
         scanf_s("%d", &receptionistChoice);
 
-        switch (receptionistChoice) // since currently we do not have an order making system i can not create a system to arrange the orders - virgo
-        { // case 2
+        switch (userChoice(receptionistChoice)) // since currently we do not have an order making system i can not create a system to arrange the orders - virgo
+        {
         case 1:
             printf_s("Viewing pending orders\n--------------\n");
             break;
@@ -95,7 +110,7 @@ void photographer() // the photographer, the most developed right now, but still
     
         scanf_s("%d", &photographerChoice);
     
-        switch (photographerChoice)
+        switch (userChoice(photographerChoice))
         {
             case 1: // lisa if checki mis annab erineva lause kui sul on materjalid otsas.
             if (paperAmount == 0 || developerAmount == 0) // currently the only system implemented. on inputting '1', the paper and developer amount goes down and the photosDeveloped variable goes up.
@@ -137,7 +152,7 @@ int main()
 
         scanf_s("%d", &roleChosen); //user makes a choice using this function.
     
-        switch (roleChosen) // this switch holds the necessary code for everything regarding different roles and their respective systems.
+        switch (userChoice(roleChosen)) // this switch holds the necessary code for everything regarding different roles and their respective systems.
         {
         case 1: 
             receptionist();
