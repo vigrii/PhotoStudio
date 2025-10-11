@@ -27,6 +27,17 @@ bool fullExitChosen = false;
 int photographerChoice = 0;
 int receptionistChoice = 0;
 
+struct client
+{
+    bool isOccupied;
+    bool rushOrder;
+    char name[20];
+    int day, month, year;
+    bool developOrPrintPhoto; //false = develop; true = print
+};
+
+client* clients[10];
+
 int userChoice(int Choice)
 {
     system("cls"); //clears the terminal after each input, only works in windows machines, (for some reason my vs code terminal bugs out if this is included but works in the .exe, uncomment before finishing project)
@@ -57,6 +68,13 @@ void receptionist() // heavily in development, the receptionist, currently the u
         {
         case 1:
             printf_s("Viewing pending orders\n--------------\n");
+            for (int i = 0; i < sizeof(clients); i++)
+            {
+                if (clients[i]->isOccupied)
+                {
+                    printf_s("\n%d. client %s occupied.", i, clients[i]->name);
+                }
+            }
             break;
 
         case 2:
