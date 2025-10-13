@@ -26,17 +26,21 @@ bool fullExitChosen = false;
 
 int photographerChoice = 0;
 int receptionistChoice = 0;
+int customerChoice = 0;
+
+int currentClient;
 
 struct client
 {
     bool isOccupied;
     bool rushOrder;
+    int rushOrderInt;
     char name[20];
     int day, month, year;
     int photosToPrint, photosToDevelop;
 };
 
-client* clients[10];
+client clients[10];
 
 int userChoice(int Choice)
 {
@@ -68,18 +72,19 @@ void receptionist() // heavily in development, the receptionist, currently the u
         {
         case 1:
             printf_s("Viewing pending orders\n--------------\n");
-            for (int i = 0; i < sizeof(clients); i++)//TODO: viska seda case 2te, ehk üks asi võrra alla.
-            {
-                if (clients[i]->isOccupied)
-                {
-                    printf_s("\n%d. client %s occupied.", i, clients[i]->name);
-                }
-            }
+            
             break;
 
         case 2:
             printf_s("Viewing ongoing orders\n--------------\n");
-            break;
+            for (int i = 0; i < sizeof(clients); i++)//TODO: see lopetab programmi
+            {
+                if (clients[i].isOccupied)
+                {
+                    printf_s("\n%d. client %s occupied.", i, clients[i].name);
+                }
+            }
+            
 
         case 3:
             printf_s("Viewing completed orders\n---------------\n");
@@ -108,10 +113,49 @@ void receptionist() // heavily in development, the receptionist, currently the u
 
 void customer() // heavily in development, the customer will be the one who can make an order and decide if it's a rush order or not.
 {
+    
     printf_s("Customer chosen\n");
 
-    printf_s("What would you like to do? (Enter only number)\n");
-    printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (IN DEVELOPMENT)\n");
+    printf_s("Would you like to print and/or develop photos?\n 1. Yes\n 2. No\n");
+    
+    scanf_s("%d", &customerChoice);
+    if (customerChoice == 2) return;
+
+    while (!exitChosen)
+    {
+        for (int i = 0; i < sizeof(clients); i++)
+        {
+            if (!clients[i].isOccupied)
+            {
+                currentClient = i;
+                clients[currentClient].isOccupied = true;
+                break;
+            }
+        }
+        
+        printf_s("Input your name.\n");
+        scanf_s("%s", clients[currentClient].name, (unsigned)sizeof(clients[currentClient].name));
+        
+        printf_s("%s.\n", clients[currentClient].name);
+        
+        printf_s("Would you like a rush order or regular order?.\n 0. Regular\n 1. Rush");
+
+        scanf_s("%d", &clients[currentClient].rushOrderInt);
+        
+        switch (clients[currentClient].rushOrderInt)
+        {
+        case 0:
+            printf_s("Regular order selected\n");
+            clients[currentClient].rushOrder = false;
+            break;
+        case 1:
+            printf_s("Rush order selected\n");
+            clients[currentClient].rushOrder = true;
+            break;
+        default:
+            printf_s("Invalid choice\n");
+        }
+    }
 }
 
 void photographer() // the photographer, the most developed right now, but still not finished. the photographer can complete the orders by using the necessary materials.
