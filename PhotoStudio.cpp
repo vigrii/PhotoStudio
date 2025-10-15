@@ -77,12 +77,13 @@ void receptionist() // heavily in development, the receptionist, currently the u
 
         case 2:
             printf_s("Viewing ongoing orders\n--------------\n");
-            for (int i = 0; i < sizeof(clients); i++)//TODO: see lopetab programmi
+            for (int i = 0; i < sizeof(clients); i++)
             {
                 if (clients[i].isOccupied)
                 {
                     printf_s("\n%d. client %s occupied.", i, clients[i].name);
                 }
+                else break;
             }
             
 
@@ -147,10 +148,12 @@ void customer() // heavily in development, the customer will be the one who can 
         case 0:
             printf_s("Regular order selected\n");
             clients[currentClient].rushOrder = false;
+            exitChosen = true;
             break;
         case 1:
             printf_s("Rush order selected\n");
             clients[currentClient].rushOrder = true;
+            exitChosen = true;
             break;
         default:
             printf_s("Invalid choice\n");
