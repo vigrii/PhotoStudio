@@ -1,4 +1,5 @@
 
+#include <cstring>
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -147,9 +148,9 @@ void customer() // heavily in development, the customer will be the one who can 
                 break;
             }
         }
-        
-        printf_s("Input your name.\n");
-        scanf_s("%s", clients[currentClient].name, (unsigned)sizeof(clients[currentClient].name));
+
+        printf_s("Input your name:\n");
+        scanf_s(" %[^\n]", clients[currentClient].name, (unsigned)sizeof(clients[currentClient].name));
         
         printf_s("%s.\n", clients[currentClient].name);
 
@@ -190,13 +191,15 @@ void photographer() // the photographer, the most developed right now, but still
     client currentClient;
     printf_s("Photographer chosen\n");
     printf_s("You currently have: %d paper, %d developer and %d ink\n", paperAmount, developerAmount, inkAmount);
+
+    printf_s("Select your customer. (Enter only number)\n");
+
+    scanf_s("%d", &photographerCustomerChoice);
+    currentClient = clients[photographerCustomerChoice];
     
     while (!exitChosen)
     {
-        printf_s("Select your customer. (Enter only number)\n");
-
-        scanf_s("%d", &photographerCustomerChoice);
-        currentClient = clients[photographerCustomerChoice];
+        
         
         printf_s("You have %d photos printed and %d photos developed\n", currentClient.photosPrinted, currentClient.photosDeveloped);
         printf_s("You have %d photos to print and %d photos to develop.\n\n", currentClient.photosToPrint, currentClient.photosToDevelop);
