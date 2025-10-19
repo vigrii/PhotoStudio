@@ -37,7 +37,7 @@ struct client
     int rushOrderInt;
     char name[20];
     int day, month, year;
-    int photosToPrint, photosToDevelop;
+    int photosToPrint, photosToDevelop, photosPrinted, photosDeveloped;
 };
 
 client clients[10];
@@ -138,6 +138,14 @@ void customer() // heavily in development, the customer will be the one who can 
         scanf_s("%s", clients[currentClient].name, (unsigned)sizeof(clients[currentClient].name));
         
         printf_s("%s.\n", clients[currentClient].name);
+
+        printf_s("How many photos would you like to print?");
+
+        scanf_s("%d", &clients[currentClient].photosToPrint);
+
+        printf_s("How many photos would you like to develop?");
+
+        scanf_s("%d", &clients[currentClient].photosToDevelop);
         
         printf_s("Would you like a rush order or regular order?.\n 0. Regular\n 1. Rush");
 
@@ -163,13 +171,21 @@ void customer() // heavily in development, the customer will be the one who can 
 
 void photographer() // the photographer, the most developed right now, but still not finished. the photographer can complete the orders by using the necessary materials.
 {
+
+    int photographerCustomerChoice = 0;
+    client currentClient;
     printf_s("Photographer chosen\n");
     printf_s("You currently have: %d paper, %d developer and %d ink\n", paperAmount, developerAmount, inkAmount);
     
     while (!exitChosen)
     {
-        printf_s("You have %d photos printed and %d photos developed\n", photosPrinted, photosDeveloped);
-        printf_s("You have %d photos to print and %d photos to develop.\n\n", photosToPrint, photosToDevelop);
+        printf_s("Select your customer. (Enter only number)\n");
+
+        scanf_s("%d", &photographerCustomerChoice);
+        currentClient = clients[photographerCustomerChoice];
+        
+        printf_s("You have %d photos printed and %d photos developed\n", currentClient.photosPrinted, currentClient.photosDeveloped);
+        printf_s("You have %d photos to print and %d photos to develop.\n\n", currentClient.photosToPrint, currentClient.photosToDevelop);
         printf_s("What would you like to do? (Enter only number)\n");
         printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (IN DEVELOPMENT)\n");
     
@@ -185,10 +201,10 @@ void photographer() // the photographer, the most developed right now, but still
             }
             
                 printf_s("Developing photos.\n");
-                --photosToDevelop;
+                --currentClient.photosToDevelop;
                 --developerAmount;
                 --paperAmount;
-                ++photosDeveloped;
+                ++currentClient.photosDeveloped;
                 ++developerSpent;
                 ++paperSpent;
                 totalRevenue += 1.2f;
@@ -202,7 +218,10 @@ void photographer() // the photographer, the most developed right now, but still
                 printf_s("Invalid choice\n");
                 break;
         }
+        clients[photographerCustomerChoice] = currentClient;
     }
+    
+    
 }
 int main()
 {
