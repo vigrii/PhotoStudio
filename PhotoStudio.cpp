@@ -26,6 +26,35 @@ bool fullExitChosen = false;
 
 int photographerChoice = 0;
 int receptionistChoice = 0;
+int customerChoice = 0;
+
+int currentClient;
+
+struct client
+{
+    bool isOccupied;
+    bool rushOrder;
+    int rushOrderInt;
+    char name[20];
+    int day, month, year;
+    int photosToPrint, photosToDevelop, photosPrinted, photosDeveloped;
+};
+
+client clients[10];
+
+int userChoice(int Choice)
+{
+    system("cls"); //clears the terminal after each input, only works in windows machines, (for some reason my vs code terminal bugs out if this is included but works in the .exe, uncomment before finishing project)
+    if(Choice == 9)
+    {
+        exitChosen = true;
+        return 0;
+    }
+    else
+    {
+        return Choice;
+    }
+}
 
 int userChoice(int Choice)
 {
@@ -57,11 +86,20 @@ void receptionist() // heavily in development, the receptionist, currently the u
         {
         case 1:
             printf_s("Viewing pending orders\n--------------\n");
+            
             break;
 
         case 2:
             printf_s("Viewing ongoing orders\n--------------\n");
-            break;
+            for (int i = 0; i < sizeof(clients); i++)
+            {
+                if (clients[i].isOccupied)
+                {
+                    printf_s("\n%d. client %s occupied.", i, clients[i].name);
+                }
+                else break;
+            }
+            
 
         case 3:
             printf_s("Viewing completed orders\n---------------\n");
@@ -90,21 +128,78 @@ void receptionist() // heavily in development, the receptionist, currently the u
 
 void customer() // heavily in development, the customer will be the one who can make an order and decide if it's a rush order or not.
 {
+    
     printf_s("Customer chosen\n");
 
-    printf_s("What would you like to do? (Enter only number)\n");
-    printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (IN DEVELOPMENT)\n");
+    printf_s("Would you like to print and/or develop photos?\n 1. Yes\n 2. No\n");
+    
+    scanf_s("%d", &customerChoice);
+    if (customerChoice == 2) return;
+
+    while (!exitChosen)
+    {
+        for (int i = 0; i < sizeof(clients); i++)
+        {
+            if (!clients[i].isOccupied)
+            {
+                currentClient = i;
+                clients[currentClient].isOccupied = true;
+                break;
+            }
+        }
+        
+        printf_s("Input your name.\n");
+        scanf_s("%s", clients[currentClient].name, (unsigned)sizeof(clients[currentClient].name));
+        
+        printf_s("%s.\n", clients[currentClient].name);
+
+        printf_s("How many photos would you like to print?");
+
+        scanf_s("%d", &clients[currentClient].photosToPrint);
+
+        printf_s("How many photos would you like to develop?");
+
+        scanf_s("%d", &clients[currentClient].photosToDevelop);
+        
+        printf_s("Would you like a rush order or regular order?.\n 0. Regular\n 1. Rush");
+
+        scanf_s("%d", &clients[currentClient].rushOrderInt);
+        
+        switch (clients[currentClient].rushOrderInt)
+        {
+        case 0:
+            printf_s("Regular order selected\n");
+            clients[currentClient].rushOrder = false;
+            exitChosen = true;
+            break;
+        case 1:
+            printf_s("Rush order selected\n");
+            clients[currentClient].rushOrder = true;
+            exitChosen = true;
+            break;
+        default:
+            printf_s("Invalid choice\n");
+        }
+    }
 }
 
 void photographer() // the photographer, the most developed right now, but still not finished. the photographer can complete the orders by using the necessary materials.
 {
+
+    int photographerCustomerChoice = 0;
+    client currentClient;
     printf_s("Photographer chosen\n");
     printf_s("You currently have: %d paper, %d developer and %d ink\n", paperAmount, developerAmount, inkAmount);
     
     while (!exitChosen)
     {
-        printf_s("You have %d photos printed and %d photos developed\n", photosPrinted, photosDeveloped);
-        printf_s("You have %d photos to print and %d photos to develop.\n\n", photosToPrint, photosToDevelop);
+        printf_s("Select your customer. (Enter only number)\n");
+
+        scanf_s("%d", &photographerCustomerChoice);
+        currentClient = clients[photographerCustomerChoice];
+        
+        printf_s("You have %d photos printed and %d photos developed\n", currentClient.photosPrinted, currentClient.photosDeveloped);
+        printf_s("You have %d photos to print and %d photos to develop.\n\n", currentClient.photosToPrint, currentClient.photosToDevelop);
         printf_s("What would you like to do? (Enter only number)\n");
         printf_s("1. Develop photos\n2. Print photos\n3. Exit\n4. Submit a report. (IN DEVELOPMENT)\n");
     
@@ -120,10 +215,10 @@ void photographer() // the photographer, the most developed right now, but still
             }
             
                 printf_s("Developing photos.\n");
-                --photosToDevelop;
+                --currentClient.photosToDevelop;
                 --developerAmount;
                 --paperAmount;
-                ++photosDeveloped;
+                ++currentClient.photosDeveloped;
                 ++developerSpent;
                 ++paperSpent;
                 totalRevenue += 1.2f;
@@ -137,7 +232,10 @@ void photographer() // the photographer, the most developed right now, but still
                 printf_s("Invalid choice\n");
                 break;
         }
+        clients[photographerCustomerChoice] = currentClient;
     }
+    
+    
 }
 int main()
 {
