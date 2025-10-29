@@ -93,8 +93,8 @@ void receptionist() // heavily in development, the receptionist, currently the u
                             clients[i].isForwarded = true;
                         }
                     }
-                    else {printf_s("No ongoing orders found\n");}
                 }
+                printf_s("No ongoing orders found\n");
                 break;
                 
             }
@@ -119,7 +119,6 @@ void receptionist() // heavily in development, the receptionist, currently the u
             {
                 if (clients[i].isCompleted){
                     printf_s("Order for %s is completed!\n", clients[i].name);
-                break;
                 }
             }
             break;
@@ -215,14 +214,13 @@ void customer() //Function for the customer role  // tbh tundub semi done, kui k
     {
         printf_s("Enter your Customer ID\n");
         scanf_s("%d", &currentClient);
-        printf_s("Current progress:\n %d Photos to print\n %d Photos to develop\n %d Photos printed\n %d Photos developed\n Deadline: %d/%d/%d", clients[currentClient].photosToPrint, clients[currentClient].photosToDevelop, clients[currentClient].photosPrinted, clients[currentClient].photosDeveloped, clients[currentClient].day, clients[currentClient].month, clients[currentClient].year);
+        printf_s("Current progress:\n %d Photos to print\n %d Photos to develop\n %d Photos printed\n %d Photos developed\n Deadline: %d/%d/%d\n", clients[currentClient].photosToPrint, clients[currentClient].photosToDevelop, clients[currentClient].photosPrinted, clients[currentClient].photosDeveloped, clients[currentClient].day, clients[currentClient].month, clients[currentClient].year);
     }
 }
 
 void photographer() // the photographer, the most developed right now, but still not finished. the photographer can complete the orders by using the necessary materials.
 {
-    int photographerCustomerChoice = 0;
-    client currentClient;
+    int photographerCustomerChoice;
     printf_s("Photographer chosen\n");
     printf_s("You currently have: %d paper, %d developer and %d ink\n", paperAmount, developerAmount, inkAmount);
     printf_s("Orders to complete:\n\n");
@@ -231,20 +229,18 @@ void photographer() // the photographer, the most developed right now, but still
         if (clients[i].isForwarded){
             printf_s("Customer %d has an uncomplete order!\n", i);
         }
-        else break;
     }
 
     printf_s("Select your customer. (Enter only number)\n");
 
     scanf_s("%d", &photographerCustomerChoice);
-    currentClient = clients[photographerCustomerChoice];
     
     while (!exitChosen)
     {
-        printf_s("You have %d photos printed and %d photos developed\n", photosPrinted, photosDeveloped);
-        printf_s("You have %d photos to print and %d photos to develop.\n\n", photosToPrint, photosToDevelop);
+        printf_s("You have %d photos printed and %d photos developed\n", clients[photographerCustomerChoice].photosPrinted, clients[photographerCustomerChoice].photosDeveloped);
+        printf_s("You have %d photos to print and %d photos to develop.\n\n", clients[photographerCustomerChoice].photosToPrint, clients[photographerCustomerChoice].photosToDevelop);
         printf_s("What would you like to do? (Enter only number)\n");
-        printf_s("1. Develop photos\n2. Print photos\n3. Finish order.\n4. Exit\n");
+        printf_s("1. Develop photos\n2. Print photos\n3. Finish order.\n4. Pray for materials\n5. Exit\n");
     
         scanf_s("%d", &photographerChoice);
     
@@ -256,31 +252,37 @@ void photographer() // the photographer, the most developed right now, but still
                 printf_s("Insufficient materials!\n");
                 continue;
             }
-                //TODO add if to check if you need to develop more photos for the client
-                printf_s("Developing photos.\n");
-                --currentClient.photosToDevelop;
-                (*pntDeveloperAmount)--;
-                (*pntPaperAmount)--;
-                ++currentClient.photosDeveloped;
-                ++developerSpent;
-                ++paperSpent;
-                totalRevenue += 1.2f;
+                if (clients[photographerCustomerChoice].photosToDevelop > 0) 
+                {
+                    printf_s("Developing photos.\n");
+                    --clients[photographerCustomerChoice].photosToDevelop;
+                    (*pntDeveloperAmount)--;
+                    (*pntPaperAmount)--;
+                    ++clients[photographerCustomerChoice].photosDeveloped;
+                    ++developerSpent;
+                    ++paperSpent;
+                    totalRevenue += 1.2f;
+                }
+                else printf_s("You dont need to develop any more photos\n");
                 break;
             case 2:
 
-                
-                //TODO add if to check if you need to print more photos for the client            
-                printf_s("Printing photos.\n");
-                --currentClient.photosToPrint;
-                (*pntInkAmount)--;
-                ++currentClient.photosPrinted;
-                ++inkSpent;
-                totalRevenue += 1.2f;
+                if (clients[photographerCustomerChoice].photosToPrint > 0) {         
+                    printf_s("Printing photos.\n");
+                    --clients[photographerCustomerChoice].photosToPrint;
+                    (*pntInkAmount)--;
+                    ++clients[photographerCustomerChoice].photosPrinted;
+                    ++inkSpent;
+                    totalRevenue += 1.2f;
+                }
+                else printf_s("You dont need to print any more photos\n");
                 break;
+
+
             case 3:
-                if (currentClient.photosToPrint == 0 && currentClient.photosToDevelop == 0) {
-                    currentClient.isCompleted = true;
-                    currentClient.isForwarded = false;
+                if (clients[photographerCustomerChoice].photosToPrint == 0 && clients[photographerCustomerChoice].photosToDevelop == 0) {
+                    clients[photographerCustomerChoice].isCompleted = true;
+                    clients[photographerCustomerChoice].isForwarded = false;
                     printf_s("Order Completed!\n");
                 }
                 else {
@@ -290,6 +292,13 @@ void photographer() // the photographer, the most developed right now, but still
                 break;
 
             case 4:
+                
+                (*pntDeveloperAmount)++;
+                (*pntPaperAmount)++;
+                (*pntInkAmount)++;
+                printf_s("Restocked");
+                break;
+            case 5:
                 exitChosen = true;
                 break;
 
@@ -297,7 +306,6 @@ void photographer() // the photographer, the most developed right now, but still
                 printf_s("Invalid choice\n");
                 break;
         }
-        clients[photographerCustomerChoice] = currentClient;
     }
 }
 int main()
