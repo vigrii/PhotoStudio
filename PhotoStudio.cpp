@@ -147,6 +147,7 @@ void receptionist() // heavily in development, the receptionist, currently the u
 
 void customer() //Function for the customer role  // tbh tundub semi done, kui keegi viitsib ss võib selle switchiks teha TODO
 {
+    
     printf_s("Customer chosen\n");
 
 
@@ -306,7 +307,10 @@ void photographer() // the photographer, the most developed right now, but still
                 printf_s("Invalid choice\n");
                 break;
         }
+        clients[photographerCustomerChoice] = currentClient;
     }
+    
+    
 }
 int main()
 {
