@@ -11,17 +11,15 @@ int* pntPaperAmount = &paperAmount;
 int developerAmount = 5;
 int* pntDeveloperAmount = &developerAmount;
 int inkAmount = 5;
-int* pntInkAmount = &inkAmount; //   <--------------
-//teha sama pointeri värk nendele alumistele väärtustele ka :) TODO
-int paperSpent = 0;         
-int developerSpent = 0;
-int inkSpent = 0;
+int* pntInkAmount = &inkAmount; 
 
-int photosToPrint = 5;
-int photosToDevelop = 5;
-int photosPrinted = 0;
-int photosDeveloped = 0;
-//teha sama pointeri värk nendele ylemistele väärtustele ka :)
+int paperSpent = 0;
+int* pntPaperSpent = &paperSpent;
+int developerSpent = 0;
+int* pntDeveloperSpent = &developerSpent;
+int inkSpent = 0;
+int* pntInkSpent = &inkSpent;
+
 double totalRevenue = 0;
 
 bool exitChosen = false;
@@ -36,14 +34,14 @@ int currentClient;
 struct client
 {
     bool isOccupied; //checks if index number in use
-    bool rushOrder;
-    int rushOrderInt;
+    bool rushOrder; //defines if the client order is to be rushed or not.
+    int rushOrderInt; //a workaround so that the user can make the choice (0 = regular order; 1 = rush order)
     char name[20];
     int day, month, year;
     int photosToPrint, photosToDevelop, photosPrinted, photosDeveloped;
-    bool isNew = false;
-    bool isForwarded = false;
-    bool isCompleted = false;
+    bool isNew = false; // newly added order, waiting to be forwarded
+    bool isForwarded = false; // forwarded to the photographer
+    bool isCompleted = false; // order complete, photos printed and/or developed.
 };
 
 
@@ -65,7 +63,7 @@ int userChoice(int Choice)
     }
 }
 
-void receptionist() // heavily in development, the receptionist, currently the user can view the temporary text that is implemented. the receptionist will be able to see the orders that the customer has placed.
+void receptionist() // the receptionist can see the orders that the customer has placed.
 {
     printf_s("Receptionist chosen\n");
     while (!exitChosen) {
@@ -145,7 +143,7 @@ void receptionist() // heavily in development, the receptionist, currently the u
 }
 
 
-void customer() //Function for the customer role  // tbh tundub semi done, kui keegi viitsib ss võib selle switchiks teha TODO
+void customer() //Function for the customer role. allows to place orders (if there are free slots)  // tbh tundub semi done, kui keegi viitsib ss võib selle switchiks teha TODO
 {
     
     printf_s("Customer chosen\n");
@@ -174,24 +172,24 @@ void customer() //Function for the customer role  // tbh tundub semi done, kui k
 
 
 
-            printf_s("Input your name:\n");
+            printf_s("Input your name:\n"); //name input
             scanf_s(" %[^\n]", clients[currentClient].name, (unsigned)sizeof(clients[currentClient].name));
             
             printf_s("%s.\n", clients[currentClient].name);
 
-            printf_s("How many photos would you like to print?\n");
+            printf_s("How many photos would you like to print?\n"); //print photo input
 
             scanf_s("%d", &clients[currentClient].photosToPrint);
 
-            printf_s("How many photos would you like to develop?\n");
+            printf_s("How many photos would you like to develop?\n"); //develop photo input
 
             scanf_s("%d", &clients[currentClient].photosToDevelop);
 
-            printf_s("When would you like to collect the photos? (dd mm yyyy)\n");
+            printf_s("When would you like to collect the photos? (dd mm yyyy)\n"); //order deadline input
 
             scanf_s("%d %d %d", &clients[currentClient].day, &clients[currentClient].month, &clients[currentClient].year);
             
-            printf_s("Would you like a rush order or regular order?\n 0. Regular\n 1. Rush\n");
+            printf_s("Would you like a rush order or regular order?\n 0. Regular\n 1. Rush\n"); //rush/regular order input
 
             scanf_s("%d", &clients[currentClient].rushOrderInt);
             
@@ -219,7 +217,7 @@ void customer() //Function for the customer role  // tbh tundub semi done, kui k
     }
 }
 
-void photographer() // the photographer, the most developed right now, but still not finished. the photographer can complete the orders by using the necessary materials.
+void photographer() // the photographer. the photographer can complete the orders by using the necessary materials.
 {
     int photographerCustomerChoice;
     printf_s("Photographer chosen\n");
@@ -247,13 +245,13 @@ void photographer() // the photographer, the most developed right now, but still
     
         switch (userChoice(photographerChoice))
         {
-            case 1: // lisa if checki mis annab erineva lause kui sul on materjalid otsas.
-            if (paperAmount == 0 || developerAmount == 0) // currently the only system implemented. on inputting '1', the paper and developer amount goes down and the photosDeveloped variable goes up.
+            case 1:
+            if (paperAmount == 0 || developerAmount == 0) 
             { //case 1
                 printf_s("Insufficient materials!\n");
                 continue;
             }
-                if (clients[photographerCustomerChoice].photosToDevelop > 0) 
+                if (clients[photographerCustomerChoice].photosToDevelop > 0)  // main way to develop photos.
                 {
                     printf_s("Developing photos.\n");
                     --clients[photographerCustomerChoice].photosToDevelop;
@@ -266,7 +264,7 @@ void photographer() // the photographer, the most developed right now, but still
                 }
                 else printf_s("You dont need to develop any more photos\n");
                 break;
-            case 2:
+            case 2:  // main way to print photos.
 
                 if (clients[photographerCustomerChoice].photosToPrint > 0) {         
                     printf_s("Printing photos.\n");
@@ -280,19 +278,19 @@ void photographer() // the photographer, the most developed right now, but still
                 break;
 
 
-            case 3:
+            case 3: // if all of the photos are printed and/or develop, the user can select this option to mark the order as "Complete"
                 if (clients[photographerCustomerChoice].photosToPrint == 0 && clients[photographerCustomerChoice].photosToDevelop == 0) {
                     clients[photographerCustomerChoice].isCompleted = true;
                     clients[photographerCustomerChoice].isForwarded = false;
                     printf_s("Order Completed!\n");
                 }
-                else {
+                else { //if there are photos still undone, this message will appear when trying to select the 'complete' option.
                     printf_s("Cannot complete order! Order still has photos to print/develop\n");
                 }
                 exitChosen = true;
                 break;
 
-            case 4:
+            case 4: //temporary method to restock materials
                 
                 (*pntDeveloperAmount)++;
                 (*pntPaperAmount)++;
@@ -307,7 +305,7 @@ void photographer() // the photographer, the most developed right now, but still
                 printf_s("Invalid choice\n");
                 break;
         }
-        clients[photographerCustomerChoice] = currentClient;
+        clients[photographerCustomerChoice] = clients[currentClient];
     }
     
     
