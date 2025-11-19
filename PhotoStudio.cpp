@@ -31,6 +31,9 @@ int customerChoice = 0;
 
 int currentClient;
 
+int clientCapacity = 10;
+int clientCurrentCount;
+
 struct client
 {
     bool isOccupied; //checks if index number in use
@@ -47,7 +50,8 @@ struct client
 
 
 
-client clients[10]; //allows max of 10 clients
+client clientArray[10]; //allows max of 10 clients
+
 
 int userChoice(int Choice)
 {
@@ -81,14 +85,14 @@ void receptionist() // the receptionist can see the orders that the customer has
                 printf_s("Viewing new orders\n--------------\n");
                 for (int i = 0; i < 10; i++)
                 {
-                    if (clients[i].isNew){
-                        printf_s("%s has made an order!\nWould you like to forward the order to the photographer?\n 1. Yes\n 2. No\n", clients[i].name);
+                    if (clientArray[i].isNew){
+                        printf_s("%s has made an order!\nWould you like to forward the order to the photographer?\n 1. Yes\n 2. No\n", clientArray[i].name);
 
                         scanf_s("%d", &receptionistChoice);
                         if (receptionistChoice == 1)
                         {
-                            clients[i].isNew = false;
-                            clients[i].isForwarded = true;
+                            clientArray[i].isNew = false;
+                            clientArray[i].isForwarded = true;
                         }
                     }
                 }
@@ -102,9 +106,9 @@ void receptionist() // the receptionist can see the orders that the customer has
             printf_s("Viewing ongoing orders\n--------------\n");
             for (int i = 0; i < 10; i++)
             {
-                if (clients[i].isForwarded)
+                if (clientArray[i].isForwarded)
                 {
-                    printf_s("\n Customer id: %d\n Customer name: %s\n %d Photos to print\n %d Photos to develop\n %d Photos printed\n %d Photos developed\n Deadline:\n %d/%d/%d\n\n", i, clients[i].name, clients[i].photosToPrint, clients[i].photosToDevelop, clients[i].photosPrinted, clients[i].photosDeveloped, clients[i].day, clients[i].month, clients[i].year);
+                    printf_s("\n Customer id: %d\n Customer name: %s\n %d Photos to print\n %d Photos to develop\n %d Photos printed\n %d Photos developed\n Deadline:\n %d/%d/%d\n\n", i, clientArray[i].name, clientArray[i].photosToPrint, clientArray[i].photosToDevelop, clientArray[i].photosPrinted, clientArray[i].photosDeveloped, clientArray[i].day, clientArray[i].month, clientArray[i].year);
                 }
                 else break;
             }
@@ -115,8 +119,8 @@ void receptionist() // the receptionist can see the orders that the customer has
             printf_s("Viewing completed orders\n---------------\n");
             for (int i = 0; i < 10; i++)
             {
-                if (clients[i].isCompleted){
-                    printf_s("Order for %s is completed!\n", clients[i].name);
+                if (clientArray[i].isCompleted){
+                    printf_s("Order for %s is completed!\n", clientArray[i].name);
                 }
             }
             break;
@@ -159,11 +163,11 @@ void customer() //Function for the customer role. allows to place orders (if the
         {
             for (int i = 0; i < 10; i++)
             {
-                if (!clients[i].isOccupied)
+                if (!clientArray[i].isOccupied)
                 {
                     currentClient = i;
-                    clients[currentClient].isOccupied = true;
-                    clients[currentClient].isNew = true;
+                    clientArray[currentClient].isOccupied = true;
+                    clientArray[currentClient].isNew = true;
                     printf_s("Your client number is %d, Dont forget it!\n", i);
                     break;
                 }
@@ -173,36 +177,36 @@ void customer() //Function for the customer role. allows to place orders (if the
 
 
             printf_s("Input your name:\n"); //name input
-            scanf_s(" %[^\n]", clients[currentClient].name, (unsigned)sizeof(clients[currentClient].name));
+            scanf_s(" %[^\n]", clientArray[currentClient].name, (unsigned)sizeof(clientArray[currentClient].name));
             
-            printf_s("%s.\n", clients[currentClient].name);
+            printf_s("%s.\n", clientArray[currentClient].name);
 
             printf_s("How many photos would you like to print?\n"); //print photo input
 
-            scanf_s("%d", &clients[currentClient].photosToPrint);
+            scanf_s("%d", &clientArray[currentClient].photosToPrint);
 
             printf_s("How many photos would you like to develop?\n"); //develop photo input
 
-            scanf_s("%d", &clients[currentClient].photosToDevelop);
+            scanf_s("%d", &clientArray[currentClient].photosToDevelop);
 
             printf_s("When would you like to collect the photos? (dd mm yyyy)\n"); //order deadline input
 
-            scanf_s("%d %d %d", &clients[currentClient].day, &clients[currentClient].month, &clients[currentClient].year);
+            scanf_s("%d %d %d", &clientArray[currentClient].day, &clientArray[currentClient].month, &clientArray[currentClient].year);
             
             printf_s("Would you like a rush order or regular order?\n 0. Regular\n 1. Rush\n"); //rush/regular order input
 
-            scanf_s("%d", &clients[currentClient].rushOrderInt);
+            scanf_s("%d", &clientArray[currentClient].rushOrderInt);
             
-            switch (clients[currentClient].rushOrderInt)
+            switch (clientArray[currentClient].rushOrderInt)
             {
             case 0:
                 printf_s("Regular order selected\n");
-                clients[currentClient].rushOrder = false;
+                clientArray[currentClient].rushOrder = false;
                 exitChosen = true;
                 break;
             case 1:
                 printf_s("Rush order selected\n");
-                clients[currentClient].rushOrder = true;
+                clientArray[currentClient].rushOrder = true;
                 exitChosen = true;
                 break;
             default:
@@ -213,7 +217,7 @@ void customer() //Function for the customer role. allows to place orders (if the
     {
         printf_s("Enter your Customer ID\n");
         scanf_s("%d", &currentClient);
-        printf_s("Current progress:\n %d Photos to print\n %d Photos to develop\n %d Photos printed\n %d Photos developed\n Deadline: %d/%d/%d\n", clients[currentClient].photosToPrint, clients[currentClient].photosToDevelop, clients[currentClient].photosPrinted, clients[currentClient].photosDeveloped, clients[currentClient].day, clients[currentClient].month, clients[currentClient].year);
+        printf_s("Current progress:\n %d Photos to print\n %d Photos to develop\n %d Photos printed\n %d Photos developed\n Deadline: %d/%d/%d\n", clientArray[currentClient].photosToPrint, clientArray[currentClient].photosToDevelop, clientArray[currentClient].photosPrinted, clientArray[currentClient].photosDeveloped, clientArray[currentClient].day, clientArray[currentClient].month, clientArray[currentClient].year);
     }
 }
 
@@ -225,7 +229,7 @@ void photographer() // the photographer. the photographer can complete the order
     printf_s("Orders to complete:\n\n");
     for (int i = 0; i < 10; i++)
     {
-        if (clients[i].isForwarded){
+        if (clientArray[i].isForwarded){
             printf_s("Customer %d has an uncomplete order!\n", i);
         }
     }
@@ -236,8 +240,8 @@ void photographer() // the photographer. the photographer can complete the order
     
     while (!exitChosen)
     {
-        printf_s("You have %d photos printed and %d photos developed\n", clients[photographerCustomerChoice].photosPrinted, clients[photographerCustomerChoice].photosDeveloped);
-        printf_s("You have %d photos to print and %d photos to develop.\n\n", clients[photographerCustomerChoice].photosToPrint, clients[photographerCustomerChoice].photosToDevelop);
+        printf_s("You have %d photos printed and %d photos developed\n", clientArray[photographerCustomerChoice].photosPrinted, clientArray[photographerCustomerChoice].photosDeveloped);
+        printf_s("You have %d photos to print and %d photos to develop.\n\n", clientArray[photographerCustomerChoice].photosToPrint, clientArray[photographerCustomerChoice].photosToDevelop);
         printf_s("What would you like to do? (Enter only number)\n");
         printf_s("1. Develop photos\n2. Print photos\n3. Finish order.\n4. Pray for materials\n5. Exit\n");
     
@@ -251,13 +255,13 @@ void photographer() // the photographer. the photographer can complete the order
                 printf_s("Insufficient materials!\n");
                 continue;
             }
-                if (clients[photographerCustomerChoice].photosToDevelop > 0)  // main way to develop photos.
+                if (clientArray[photographerCustomerChoice].photosToDevelop > 0)  // main way to develop photos.
                 {
                     printf_s("Developing photos.\n");
-                    --clients[photographerCustomerChoice].photosToDevelop;
+                    --clientArray[photographerCustomerChoice].photosToDevelop;
                     (*pntDeveloperAmount)--;
                     (*pntPaperAmount)--;
-                    ++clients[photographerCustomerChoice].photosDeveloped;
+                    ++clientArray[photographerCustomerChoice].photosDeveloped;
                     ++developerSpent;
                     ++paperSpent;
                     totalRevenue += 1.2f;
@@ -266,11 +270,11 @@ void photographer() // the photographer. the photographer can complete the order
                 break;
             case 2:  // main way to print photos.
 
-                if (clients[photographerCustomerChoice].photosToPrint > 0) {         
+                if (clientArray[photographerCustomerChoice].photosToPrint > 0) {         
                     printf_s("Printing photos.\n");
-                    --clients[photographerCustomerChoice].photosToPrint;
+                    --clientArray[photographerCustomerChoice].photosToPrint;
                     (*pntInkAmount)--;
-                    ++clients[photographerCustomerChoice].photosPrinted;
+                    ++clientArray[photographerCustomerChoice].photosPrinted;
                     ++inkSpent;
                     totalRevenue += 1.2f;
                 }
@@ -279,9 +283,9 @@ void photographer() // the photographer. the photographer can complete the order
 
 
             case 3: // if all of the photos are printed and/or develop, the user can select this option to mark the order as "Complete"
-                if (clients[photographerCustomerChoice].photosToPrint == 0 && clients[photographerCustomerChoice].photosToDevelop == 0) {
-                    clients[photographerCustomerChoice].isCompleted = true;
-                    clients[photographerCustomerChoice].isForwarded = false;
+                if (clientArray[photographerCustomerChoice].photosToPrint == 0 && clientArray[photographerCustomerChoice].photosToDevelop == 0) {
+                    clientArray[photographerCustomerChoice].isCompleted = true;
+                    clientArray[photographerCustomerChoice].isForwarded = false;
                     printf_s("Order Completed!\n");
                 }
                 else { //if there are photos still undone, this message will appear when trying to select the 'complete' option.
@@ -305,15 +309,27 @@ void photographer() // the photographer. the photographer can complete the order
                 printf_s("Invalid choice\n");
                 break;
         }
-        clients[photographerCustomerChoice] = clients[currentClient];
+        clientArray[photographerCustomerChoice] = clientArray[currentClient];
     }
     
     
 }
 int main()
 {
-
-
+    
+    client* myarray = (client*)malloc(clientCapacity * sizeof(client));
+    if (clientCurrentCount >= clientCapacity)
+    {
+        clientCapacity += 5;
+        client* myrealloced_array = (client*)realloc(myarray, clientCapacity * sizeof(client));
+        if (myrealloced_array) {
+            myarray = myrealloced_array;
+        } else {
+            // deal with realloc failing because memory could not be allocated.
+        }
+    
+    }
+    
     while(!fullExitChosen) //this is the main menu loop that allows the user to go back and forth between different roles
     {
         exitChosen = false; //used to make sure that the user can properly back out of a role (e.g photographer -> menu -> receptionist).
