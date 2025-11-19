@@ -49,8 +49,55 @@ struct client
 
 
 
+//allows max of 10 clients
+client* clientArray = NULL;
 
-client clientArray[10]; //allows max of 10 clients
+// Initialize a client with default values
+void initClient(client* c) {
+    c->isOccupied = false;
+    c->rushOrder = false;
+    c->rushOrderInt = 0;
+    memset(c->name, 0, sizeof(c->name));
+    c->day = c->month = c->year = 0;
+    c->photosToPrint = c->photosToDevelop = c->photosPrinted = c->photosDeveloped = 0;
+    c->isNew = false;
+    c->isForwarded = false;
+    c->isCompleted = false;
+}
+
+// Resize the client array when needed
+bool resizeClientArray(int newCapacity) {
+    client* newArray = (client*)realloc(clientArray, newCapacity * sizeof(client));
+    if (!newArray) {
+        return false;
+    }
+    
+    clientArray = newArray;
+    
+    // Initialize new slots
+    for (int i = clientCapacity; i < newCapacity; i++) {
+        initClient(&clientArray[i]);
+    }
+    
+    clientCapacity = newCapacity;
+    return true;
+}
+
+// Find next available client slot
+int findAvailableSlot() {
+    for (int i = 0; i < clientCapacity; i++) {
+        if (!clientArray[i].isOccupied) {
+            return i;
+        }
+    }
+    
+    // No available slots, resize array
+    if (resizeClientArray(clientCapacity + 5)) {
+        return clientCapacity - 5; // Return first new slot
+    }
+    
+    return -1; // Failed to resize
+}
 
 
 int userChoice(int Choice)
@@ -83,7 +130,7 @@ void receptionist() // the receptionist can see the orders that the customer has
         case 1:
             while (!exitChosen) {
                 printf_s("Viewing new orders\n--------------\n");
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < clientCapacity; i++)
                 {
                     if (clientArray[i].isNew){
                         printf_s("%s has made an order!\nWould you like to forward the order to the photographer?\n 1. Yes\n 2. No\n", clientArray[i].name);
@@ -104,7 +151,7 @@ void receptionist() // the receptionist can see the orders that the customer has
 
         case 2:
             printf_s("Viewing ongoing orders\n--------------\n");
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < clientCapacity; i++)
             {
                 if (clientArray[i].isForwarded)
                 {
@@ -117,7 +164,7 @@ void receptionist() // the receptionist can see the orders that the customer has
 
         case 3:
             printf_s("Viewing completed orders\n---------------\n");
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < clientCapacity; i++)
             {
                 if (clientArray[i].isCompleted){
                     printf_s("Order for %s is completed!\n", clientArray[i].name);
@@ -161,17 +208,16 @@ void customer() //Function for the customer role. allows to place orders (if the
     else if (customerChoice == 1) //Creates a new customer and starts to log his/her order
         while (!exitChosen)
         {
-            for (int i = 0; i < 10; i++)
-            {
-                if (!clientArray[i].isOccupied)
-                {
-                    currentClient = i;
-                    clientArray[currentClient].isOccupied = true;
-                    clientArray[currentClient].isNew = true;
-                    printf_s("Your client number is %d, Dont forget it!\n", i);
-                    break;
-                }
+            int slot = findAvailableSlot();
+            if (slot == -1) {
+                printf_s("Sorry, we cannot take more orders at the moment.\n");
+                return;
             }
+            
+            currentClient = slot;
+            clientArray[currentClient].isOccupied = true;
+            clientArray[currentClient].isNew = true;
+            clientCurrentCount++;
 
 
 
@@ -227,7 +273,7 @@ void photographer() // the photographer. the photographer can complete the order
     printf_s("Photographer chosen\n");
     printf_s("You currently have: %d paper, %d developer and %d ink\n", paperAmount, developerAmount, inkAmount);
     printf_s("Orders to complete:\n\n");
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < clientCapacity; i++)
     {
         if (clientArray[i].isForwarded){
             printf_s("Customer %d has an uncomplete order!\n", i);
@@ -316,18 +362,15 @@ void photographer() // the photographer. the photographer can complete the order
 }
 int main()
 {
+    clientArray = (client*)malloc(clientCapacity * sizeof(client));
+    if (!clientArray) {
+        printf_s("Memory allocation failed!\n");
+        return 1;
+    }
     
-    client* myarray = (client*)malloc(clientCapacity * sizeof(client));
-    if (clientCurrentCount >= clientCapacity)
-    {
-        clientCapacity += 5;
-        client* myrealloced_array = (client*)realloc(myarray, clientCapacity * sizeof(client));
-        if (myrealloced_array) {
-            myarray = myrealloced_array;
-        } else {
-            // deal with realloc failing because memory could not be allocated.
-        }
-    
+    // Initialize all client slots
+    for (int i = 0; i < clientCapacity; i++) {
+        initClient(&clientArray[i]);
     }
     
     while(!fullExitChosen) //this is the main menu loop that allows the user to go back and forth between different roles
@@ -361,6 +404,10 @@ int main()
             printf_s("Invalid choice\n");
             break;
         }
+    }
+
+    if (clientArray) {
+        free(clientArray);
     }
     
     
