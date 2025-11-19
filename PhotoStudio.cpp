@@ -49,10 +49,10 @@ struct client
 
 
 
-//allows max of 10 clients
+
 client* clientArray = NULL;
 
-// Initialize a client with default values
+// Initialize a client with default values so that the starting client isnt filled with garbage values.
 void initClient(client* c) {
     c->isOccupied = false;
     c->rushOrder = false;
