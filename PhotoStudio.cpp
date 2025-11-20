@@ -52,7 +52,7 @@ struct client
 
 client* clientArray = NULL;
 
-// Initialize a client with default values so that the starting client isnt filled with garbage values.
+// initialize a client with default values so that the starting client isnt filled with garbage values.
 void initClient(client* c) {
     c->isOccupied = false;
     c->rushOrder = false;
@@ -65,7 +65,7 @@ void initClient(client* c) {
     c->isCompleted = false;
 }
 
-// Resize the client array when needed
+// resize the client array when the dynamic array is filled up
 bool resizeClientArray(int newCapacity) {
     client* newArray = (client*)realloc(clientArray, newCapacity * sizeof(client));
     if (!newArray) {
@@ -83,7 +83,7 @@ bool resizeClientArray(int newCapacity) {
     return true;
 }
 
-// Find next available client slot
+// find next available client slot
 int findAvailableSlot() {
     for (int i = 0; i < clientCapacity; i++) {
         if (!clientArray[i].isOccupied) {
@@ -91,12 +91,12 @@ int findAvailableSlot() {
         }
     }
     
-    // No available slots, resize array
+    // no available slots, resize array
     if (resizeClientArray(clientCapacity + 5)) {
         return clientCapacity - 5; // Return first new slot
     }
     
-    return -1; // Failed to resize
+    return -1; // failed to resize
 }
 
 
@@ -368,7 +368,7 @@ int main()
         return 1;
     }
     
-    // Initialize all client slots
+    // initialize all client slots
     for (int i = 0; i < clientCapacity; i++) {
         initClient(&clientArray[i]);
     }
