@@ -21,6 +21,21 @@ int inkSpent = 0;
 int* pntInkSpent = &inkSpent;
 
 double totalRevenue = 0;
+double* totalRevPntr = &totalRevenue;
+double currentRevenue = 100;
+double* currentRevPntr = &currentRevenue;
+
+double paperCost;
+double* paperCostPntr = &paperCost;
+double developerCost;
+double* developerCostPntr = &developerCost;
+double inkCost;
+double* inkCostPntr = &inkCost;
+
+double printCost = 0.8;
+double* printCostPntr = &printCost;
+double developCost = 1.2;
+double* developCostPntr = &developCost;
 
 bool exitChosen = false;
 bool fullExitChosen = false;
