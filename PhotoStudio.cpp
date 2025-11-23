@@ -31,6 +31,8 @@ double developerCost;
 double* developerCostPntr = &developerCost;
 double inkCost;
 double* inkCostPntr = &inkCost;
+double materialSpendingCost;
+double* materialSpendingCostPntr = &materialSpendingCost;
 
 double printCost = 0.8;
 double* printCostPntr = &printCost;
@@ -43,6 +45,7 @@ bool fullExitChosen = false;
 int photographerChoice = 0;
 int receptionistChoice = 0;
 int customerChoice = 0;
+int materialPurchaseChoice = 0;
 
 int currentClient;
 
@@ -129,6 +132,56 @@ int userChoice(int Choice)
     }
 }
 
+int materialPurchase(int purchaseChoice)
+{
+    switch (purchaseChoice)
+    {
+    case 1:
+        if (currentRevenue >= 2.5)
+        {
+            paperAmount += 5;
+            currentRevenue -= 2.5;
+            materialSpendingCost += 2.5;
+        }
+        else
+        {
+            printf("Insufficient Balance!\n");
+        }
+        break;
+    case 2:
+        if (currentRevenue >= 3)
+        {
+            developerAmount += 5;
+            currentRevenue -= 3;
+            materialSpendingCost += 3;
+        }
+        else
+        {
+            printf("Insufficient Balance!\n");
+        }
+        break;
+    case 3:
+        if (currentRevenue >= 3)
+        {
+            inkAmount += 5;
+            currentRevenue -= 3;
+            materialSpendingCost += 3;
+        }
+        else
+        {
+            printf("Insufficient Balance!\n");
+        }
+        break;
+    case 9:
+        printf_s("Exiting.\n");
+    default:
+        printf_s("Invalid choice\n");
+        break;
+    }
+
+    return 0;
+}
+
 void receptionist() // the receptionist can see the orders that the customer has placed.
 {
     printf_s("Receptionist chosen\n");
@@ -136,7 +189,7 @@ void receptionist() // the receptionist can see the orders that the customer has
 
 
         printf_s("What would you like to do? (Enter only number)\n");
-        printf_s("1. View new orders\n2. View ongoing orders\n3. View completed orders\n4. View today's revenue\n5. View today's spent materials\n6. Exit\n");
+        printf_s("1. View new orders\n2. View ongoing orders\n3. View completed orders\n4. View today's revenue\n5. View today's spent materials\n6. Order materials\n7. Exit\n");
 
         scanf_s("%d", &receptionistChoice);
 
@@ -189,15 +242,32 @@ void receptionist() // the receptionist can see the orders that the customer has
 
         case 4:
             printf_s("Viewing today's revenue\n--------------\n");
-            printf_s("Today's revenue = %.2lf\n", totalRevenue);
+            printf_s("Amount gained from work = %.2lf\n", totalRevenue);
+            printf_s("Amount spent on materials = %.2lf\n", materialSpendingCost);
+            printf_s("Total profit = %.2lf\n", totalRevenue - materialSpendingCost);
             break;
 
         case 5:
             printf_s("Viewing today's spent materials\n---------------\n");
             printf_s("Ink spent = %d\nPaper spent = %d\nDeveloper spent = %d\n", inkSpent, paperSpent, developerSpent);
+            printf_s("Amount of money spent on materials = %.2lf\n", materialSpendingCost);
+            printf_s("Viewing today's available materials.\n---------------\n");
+            printf_s("Ink = %d\nPaper = %d\nDeveloper = %d\n", inkAmount, paperAmount, developerAmount);
             break;
 
         case 6:
+            
+            while (!exitChosen)
+            {
+                printf_s("What materials would you like to order?\n--------------\n");
+                printf("Current Balance: %0.2f\n", currentRevenue);
+                printf_s("Price List:\n1. 5x Paper = 2.5\n2. 5x Developer = 3\n3. 5x Ink = 3\n9. Exit\n");
+                scanf_s("%d", &materialPurchaseChoice);
+                materialPurchase(userChoice(materialPurchaseChoice));
+            }
+            break;
+
+        case 7:
             exitChosen = true;
             break;
 
@@ -207,6 +277,7 @@ void receptionist() // the receptionist can see the orders that the customer has
         }
     }
 }
+
 
 
 void customer() //Function for the customer role. allows to place orders (if there are free slots)  // tbh tundub semi done, kui keegi viitsib ss võib selle switchiks teha TODO
@@ -242,19 +313,19 @@ void customer() //Function for the customer role. allows to place orders (if the
             
             printf_s("%s.\n", clientArray[currentClient].name);
 
-            printf_s("How many photos would you like to print?\n"); //print photo input
+            printf_s("How many photos would you like to print? 1 photo print costs 1.2 eur.\n"); //print photo input
 
             scanf_s("%d", &clientArray[currentClient].photosToPrint);
 
-            printf_s("How many photos would you like to develop?\n"); //develop photo input
+            printf_s("How many photos would you like to develop? 1 developed photo costs 1.4 eur.\n"); //develop photo input
 
             scanf_s("%d", &clientArray[currentClient].photosToDevelop);
 
             printf_s("When would you like to collect the photos? (dd mm yyyy)\n"); //order deadline input
 
             scanf_s("%d %d %d", &clientArray[currentClient].day, &clientArray[currentClient].month, &clientArray[currentClient].year);
-            
-            printf_s("Would you like a rush order or regular order?\n 0. Regular\n 1. Rush\n"); //rush/regular order input
+            //TODO: redo the photographer system so that the business gets the money per photo.
+            printf_s("Would you like a rush order or regular order?\n 0. Regular\n 1. Rush: Order costs 30 percent more.\n"); //rush/regular order input
 
             scanf_s("%d", &clientArray[currentClient].rushOrderInt);
             
