@@ -25,11 +25,11 @@ double* totalRevPntr = &totalRevenue;
 double currentRevenue = 100;
 double* currentRevPntr = &currentRevenue;
 
-double paperCost;
+double paperCost = 2.5;
 double* paperCostPntr = &paperCost;
-double developerCost;
+double developerCost = 3;
 double* developerCostPntr = &developerCost;
-double inkCost;
+double inkCost = 3;
 double* inkCostPntr = &inkCost;
 double materialSpendingCost;
 double* materialSpendingCostPntr = &materialSpendingCost;
@@ -137,7 +137,7 @@ int materialPurchase(int purchaseChoice)
     switch (purchaseChoice)
     {
     case 1:
-        if (currentRevenue >= 2.5)
+        if (currentRevenue >= paperCost)
         {
             paperAmount += 5;
             currentRevenue -= 2.5;
@@ -149,7 +149,7 @@ int materialPurchase(int purchaseChoice)
         }
         break;
     case 2:
-        if (currentRevenue >= 3)
+        if (currentRevenue >= developerCost)
         {
             developerAmount += 5;
             currentRevenue -= 3;
@@ -161,7 +161,7 @@ int materialPurchase(int purchaseChoice)
         }
         break;
     case 3:
-        if (currentRevenue >= 3)
+        if (currentRevenue >= inkCost)
         {
             inkAmount += 5;
             currentRevenue -= 3;
@@ -313,11 +313,11 @@ void customer() //Function for the customer role. allows to place orders (if the
             
             printf_s("%s.\n", clientArray[currentClient].name);
 
-            printf_s("How many photos would you like to print? 1 photo print costs 1.2 eur.\n"); //print photo input
+            printf_s("How many photos would you like to print? 1 photo print costs %0.2f eur.\n", printCost); //print photo input
 
             scanf_s("%d", &clientArray[currentClient].photosToPrint);
 
-            printf_s("How many photos would you like to develop? 1 developed photo costs 1.4 eur.\n"); //develop photo input
+            printf_s("How many photos would you like to develop? 1 developed photo costs %0.2f eur.\n", developCost); //develop photo input
 
             scanf_s("%d", &clientArray[currentClient].photosToDevelop);
 
@@ -394,9 +394,11 @@ void photographer() // the photographer. the photographer can complete the order
                     (*pntDeveloperAmount)--;
                     (*pntPaperAmount)--;
                     ++clientArray[photographerCustomerChoice].photosDeveloped;
-                    ++developerSpent;
-                    ++paperSpent;
-                    totalRevenue += 1.2f;
+                    //TODO: redo these into pointers
+                    ++(*pntDeveloperSpent);
+                    ++(*pntPaperSpent);
+                    (*totalRevPntr) += developCost;
+                    (*currentRevPntr) += developCost;
                 }
                 else printf_s("You dont need to develop any more photos\n");
                 break;
@@ -407,8 +409,9 @@ void photographer() // the photographer. the photographer can complete the order
                     --clientArray[photographerCustomerChoice].photosToPrint;
                     (*pntInkAmount)--;
                     ++clientArray[photographerCustomerChoice].photosPrinted;
-                    ++inkSpent;
-                    totalRevenue += 1.2f;
+                    ++(*pntInkSpent);
+                    (*totalRevPntr) += printCost;
+                    (*currentRevPntr) += printCost;
                 }
                 else printf_s("You dont need to print any more photos\n");
                 break;
